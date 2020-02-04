@@ -1,2 +1,61 @@
-testanto branch
-
+---
+# Source: ingressmonitorcontroller/templates/deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    configmap.reloader.stakater.com/reload: ingressmonitorcontroller
+    
+  labels:
+    app: ingressmonitorcontroller
+    chart: "ingressmonitorcontroller-v1.0.93"
+    release: "ingressmonitorcontroller"
+    heritage: "Tiller"
+    version: v1.0.93
+    
+    group: com.stakater.platform
+    provider: stakater
+    
+  name: ingressmonitorcontroller
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: ingressmonitorcontroller
+      release: "ingressmonitorcontroller"
+      group: com.stakater.platform
+      provider: stakater
+      
+  template:
+    metadata:
+      labels:
+        app: ingressmonitorcontroller
+        chart: "ingressmonitorcontroller-v1.0.93"
+        release: "ingressmonitorcontroller"
+        heritage: "Tiller"
+        version: v1.0.93
+        
+        group: com.stakater.platform
+        provider: stakater
+        
+    spec:
+      containers:
+      - env:
+        - name: CONFIG_FILE_PATH
+          value: /etc/IngressMonitorController/config.yaml
+        - name: LOG_LEVEL
+          value: info
+        - name: LOG_FORMAT
+          value: text
+        image: "stakater/ingressmonitorcontroller:v1.0.93"
+        imagePullPolicy: IfNotPresent
+        name: ingressmonitorcontroller
+        volumeMounts:
+        - mountPath: /etc/IngressMonitorController
+          name: ingressmonitorcontroller-vol
+      serviceAccountName: ingressmonitorcontroller
+      volumes:
+        - name: ingressmonitorcontroller-vol
+          configMap:
+            name: ingressmonitorcontroller
