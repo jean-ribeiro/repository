@@ -1,1 +1,0 @@
-This controller will continuously watch ingresses/routes in specific or all namespaces, and automatically add / remove monitors in any of the uptime checkers. With the help of this solution, you can keep a check on your services and see whether they're up and running and live, without worrying about manually registering them on the Uptime checker.
